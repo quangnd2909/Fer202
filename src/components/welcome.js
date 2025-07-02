@@ -1,46 +1,56 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
-import "bootstrap/dist/js/bootstrap.bundle.min";
+import React, { useState, useEffect } from "react";
+import { useHistory, Link } from "react-router-dom"; // Sử dụng useHistory thay useNavigate
+import "bootstrap/dist/css/bootstrap.min.css"; // Đảm bảo import CSS Bootstrap
 import "../index.css";
 
-export default class Welcome extends Component {
-  constructor(props){
-    super(props)
-    
-    this.state = {
-      username: ''
+function Welcome() {
+  const [username, setUsername] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [posts, setPosts] = useState([]);
+  const history = useHistory(); // Sử dụng useHistory
+
+  // Lấy dữ liệu người dùng từ sessionStorage khi component mount
+  useEffect(() => {
+    const getUserDetails = JSON.parse(sessionStorage.getItem("userDetails"));
+    if (getUserDetails) {
+      setUsername(getUserDetails.username);
+    } else {
+      history.push("/signup"); // Sử dụng history.push
     }
-  }
 
-  componentDidMount(){
-    let getUserDetails = JSON.parse(sessionStorage.getItem('userDetails'))
-    this.setState({
-      username: getUserDetails.username
-    })
+    // Dữ liệu mẫu cho bài đăng
+    const samplePosts = [
+      { id: 1, title: "Phòng trọ gần ĐH Quốc gia", location: "Thủ Đức", price: "2M", gender: "Nam" },
+      { id: 2, title: "Ghép trọ khu B, ĐH Bách Khoa", location: "Quận 10", price: "1.5M", gender: "Nữ" },
+    ];
+    setPosts(samplePosts);
+  }, [history]);
 
-  }
-
-  logOut = (e) => {
+  // Hàm logout
+  const logOut = (e) => {
     e.preventDefault();
-    this.props.history.push('/signin')
-  }  
-  render() {
-    if (sessionStorage.getItem("userDetails") === null) {
-      this.props.history.push('/signup')
-    }else{
-    return (
-      <div>
-        <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container">
-          <a className="navbar-brand" href="#">
-            BS5
-          </a>
+    sessionStorage.removeItem("userDetails");
+    history.push("/signin"); // Sử dụng history.push
+  };
+
+  // Lọc bài đăng dựa trên từ khóa
+  const filteredPosts = posts.filter(post =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div>
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+        <div className="container">
+          <Link className="navbar-brand" to="/">
+            FER202
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
-            data-toggle="collapse"
-            data-target="#navbarsExampleDefault"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarsExampleDefault"
             aria-controls="navbarsExampleDefault"
             aria-expanded="false"
             aria-label="Toggle navigation"
@@ -49,99 +59,84 @@ export default class Welcome extends Component {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul className="navbar-nav me-md-auto">
-              <li className="nav-item active">
-                <a className="nav-link" href="#">
-                  Home
-                </a>
+            <ul className="navbar-nav me-auto">
+              <li className="nav-item">
+                <Link className="nav-link" to="/welcome">
+                  Trang chủ
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Link
-                </a>
+                <Link className="nav-link" to="/search-posts">
+                  Tìm kiếm bài đăng
+                </Link>
               </li>
             </ul>
             <span className="navbar-text">
-              <Link className="nav-link" onClick={this.logOut}>
-                logout
+              <Link className="nav-link" onClick={logOut}>
+                Đăng xuất
               </Link>
             </span>
           </div>
         </div>
-        </nav>
-        <main role="main">
-          <div className="jumbotron">
-            <div className="container">
-              <h1 className="display-3">Hello, {this.state.username}!</h1>
-              <p>
-                This is a template for a simple marketing or informational
-                website. It includes a large callout called a jumbotron and
-                three supporting pieces of content. Use it as a starting point
-                to create something more unique.
-              </p>
-              <p>
-                <a className="btn btn-primary btn-lg" href="#" role="button">
-                  Learn more &raquo;
-                </a>
-              </p>
-            </div>
-          </div>
+      </nav>
 
+      <main role="main">
+        <div className="jumbotron">
           <div className="container">
-            <div className="row">
-              <div className="col-md-4">
-                <h2>Heading</h2>
-                <p>
-                  Donec id elit non mi porta gravida at eget metus. Fusce
-                  dapibus, tellus ac cursus commodo, tortor mauris condimentum
-                  nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                  malesuada magna mollis euismod. Donec sed odio dui.{" "}
-                </p>
-                <p>
-                  <a className="btn btn-secondary" href="#" role="button">
-                    View details &raquo;
-                  </a>
-                </p>
-              </div>
-              <div className="col-md-4">
-                <h2>Heading</h2>
-                <p>
-                  Donec id elit non mi porta gravida at eget metus. Fusce
-                  dapibus, tellus ac cursus commodo, tortor mauris condimentum
-                  nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                  malesuada magna mollis euismod. Donec sed odio dui.{" "}
-                </p>
-                <p>
-                  <a className="btn btn-secondary" href="#" role="button">
-                    View details &raquo;
-                  </a>
-                </p>
-              </div>
-              <div className="col-md-4">
-                <h2>Heading</h2>
-                <p>
-                  Donec sed odio dui. Cras justo odio, dapibus ac facilisis in,
-                  egestas eget quam. Vestibulum id ligula porta felis euismod
-                  semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-                  condimentum nibh, ut fermentum massa justo sit amet risus.
-                </p>
-                <p>
-                  <a className="btn btn-secondary" href="#" role="button">
-                    View details &raquo;
-                  </a>
-                </p>
-              </div>
-            </div>
-
-            <hr />
+            <h1 className="display-3">Hello, {username || "Khách"}!</h1>
+            <p>
+              Chào mừng đến với nền tảng tìm phòng và bạn ở ghép của bạn!
+            </p>
+            <p>
+              <a className="btn btn-primary btn-lg" href="#" role="button">
+                Tìm hiểu thêm »
+              </a>
+            </p>
           </div>
-        </main>
+        </div>
 
-        <footer className="container">
-          <p>&copy; Company 2017-2019</p>
-        </footer>
-      </div>
-    );
-  }
+        <div className="container">
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Tìm theo tiêu đề hoặc khu vực..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="row">
+            {filteredPosts.length > 0 ? (
+              filteredPosts.map(post => (
+                <div className="col-md-4 mb-4" key={post.id}>
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title">{post.title}</h5>
+                      <p className="card-text">
+                        Khu vực: {post.location} | Giá: {post.price} | Giới tính: {post.gender}
+                      </p>
+                      <a href="#" className="btn btn-secondary">
+                        Xem chi tiết »
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center">Không tìm thấy bài đăng nào.</p>
+            )}
+          </div>
+
+          <hr />
+        </div>
+      </main>
+
+      <footer className="container">
+        <p>© FER202 2025</p>
+      </footer>
+    </div>
+  );
 }
-}
+
+export default Welcome;

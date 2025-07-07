@@ -8,9 +8,7 @@ import Login from "./components/Login";
 import SignUp from "./components/Signup";
 import welcome from "./components/welcome";
 import forgotpassword from "./components/forgotpassword";
-
-
-
+import createpost from "./components/createpost";
 function App() {
   return (
     <Router>
@@ -20,6 +18,7 @@ function App() {
         <Route path="/signup" component={SignUp} />
         <Route path="/welcome" component={welcome} />
         <Route path="/forgotpassword" component={forgotpassword} />
+        <Route path="/create-post" component={createpost} />
       </Switch>
     </Router>
   );

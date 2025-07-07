@@ -1,0 +1,63 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Nguyen Van A",
+      "email": "a@example.com",
+      "role": "user",
+      "gender": "Nam",
+      "school": "ĐH Bách Khoa",
+      "major": "CNTT",
+      "area": "Quận 10",
+      "priceRange": "2tr - 3tr",
+      "isLocked": false,
+      "profile": {
+        "age": 22,
+        "bio": "Sinh viên năm 3, thân thiện",
+        "phone": "0123456789"
+      }
+    }
+  ],
+
+  "posts": [
+    {
+      "id": 1,
+      "userId": 1,
+      "title": "Tìm bạn cùng trọ ở Q10",
+      "gender": "Nam",
+      "area": "Quận 10",
+      "priceRange": "2tr - 3tr",
+      "school": "ĐH Bách Khoa",
+      "major": "CNTT",
+      "content": "Cần người ở ghép cuối tháng",
+      "createdAt": "2025-07-07T08:00:00Z",
+      "isApproved": true,
+      "isFlagged": false
+    }
+  ],
+
+  "connections": [
+    {
+      "id": 1,
+      "fromUserId": 1,
+      "toUserId": 2,
+      "status": "pending"
+    }
+  ],
+
+  "ratings": [
+    {
+      "id": 1,
+      "fromUserId": 1,
+      "toUserId": 2,
+      "score": 5,
+      "comment": "Bạn cùng trọ tuyệt vời!"
+    }
+  ],
+
+  "systemStats": {
+    "totalUsers": 1,
+    "totalPosts": 1,
+    "successfulMatches": 0
+  }
+}
